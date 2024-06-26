@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
+
 import { IoEyeSharp } from "react-icons/io5";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { EmailValidator } from "../../../Utils/Validation";
 import { FullNameValidator } from "../../../Utils/Validation";
 import { PasswordValidator } from "../../../Utils/Validation";
-import { toast, Zoom } from "react-toastify";
+import { SucessToast, ErrorToast, InfoToast } from "../../../Utils/Toast";
+
 import BeatLoader from "react-spinners/BeatLoader";
 
 const RegistrationLeft = () => {
@@ -58,7 +66,11 @@ const RegistrationLeft = () => {
   /**
    * todo: handleSubmit function implement
    */
-
+  useEffect(() => {
+    onAuthStateChanged(auth, (userInfo) => {
+      console.log(userInfo);
+    });
+  });
   const handleSubmit = () => {
     if (!fullemail || !EmailValidator(fullemail)) {
       setfullemailError("Email is missing or wrong mail");
@@ -75,33 +87,29 @@ const RegistrationLeft = () => {
       setloading(true);
       createUserWithEmailAndPassword(auth, fullemail, fullpassword)
         .then((userInfo) => {
-          toast.success(`${fullfullname} Registration Done`, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Zoom,
+          SucessToast(`${fullfullname} Registration Done`);
+        })
+        .then(() => {
+          sendEmailVerification(auth.currentUser).then(() => {
+            InfoToast(`${fullfullname} Please check your email`, "top-right");
+          });
+        })
+        .then(() => {
+          updateProfile(auth.currentUser, {
+            displayName: fullfullname,
           });
         })
         .catch((err) => {
           let ourError = err.message.split("/")[1];
-          toast.error(ourError.slice(0, ourError.length - 2), {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Zoom,
-          });
+          ErrorToast(ourError.slice(0, ourError.length - 2));
         })
         .finally(() => {
+          setfullpasswordError("");
+          setfullfullnameError("");
+          setfullemailError("");
+          setfullpassword("");
+          setfullfullname("");
+          setfullemail("");
           setloading(false);
         });
     }
@@ -132,6 +140,7 @@ const RegistrationLeft = () => {
                       type="text"
                       name="email"
                       id="email"
+                      value={fullemail}
                       onChange={handleEmail}
                       className="py-3 font-nunito"
                       placeholder="abcd@gmail.com"
@@ -152,6 +161,7 @@ const RegistrationLeft = () => {
                       type="text"
                       name="name"
                       id="name"
+                      value={fullfullname}
                       onChange={handleFullName}
                       className="py-3 font-nunito"
                       placeholder="Khalid Bin Alam Pronoy"
@@ -174,6 +184,7 @@ const RegistrationLeft = () => {
                         type={eyeopen ? "text" : "password"}
                         name="password"
                         id="pasoword"
+                        value={fullpassword}
                         onChange={handlePassword}
                         className="py-3"
                         placeholder="..........."
