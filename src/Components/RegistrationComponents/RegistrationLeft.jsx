@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
+import { getDatabase, ref, set, push } from "firebase/database";
 
 import { IoEyeSharp } from "react-icons/io5";
 import { BsFillEyeSlashFill } from "react-icons/bs";
@@ -14,11 +15,15 @@ import { EmailValidator } from "../../../Utils/Validation";
 import { FullNameValidator } from "../../../Utils/Validation";
 import { PasswordValidator } from "../../../Utils/Validation";
 import { SucessToast, ErrorToast, InfoToast } from "../../../Utils/Toast";
+import { GetTimeNow } from "../../../Utils/Moments/Moment";
+import { useNavigate, Link } from "react-router-dom";
 
 import BeatLoader from "react-spinners/BeatLoader";
 
 const RegistrationLeft = () => {
   const auth = getAuth();
+  const db = getDatabase();
+  const navigate = useNavigate();
   const [fullemail, setfullemail] = useState("");
   const [fullfullname, setfullfullname] = useState("");
   const [fullpassword, setfullpassword] = useState("");
@@ -98,6 +103,22 @@ const RegistrationLeft = () => {
           updateProfile(auth.currentUser, {
             displayName: fullfullname,
           });
+        })
+        .then(() => {
+          const usersRef = ref(db, "users/");
+          set(push(usersRef), {
+            uid: auth.currentUser.uid,
+            userName: fullfullname,
+            userEmail: auth.currentUser.email,
+            createdAt: GetTimeNow(),
+          });
+        })
+        .then(() => {
+          console.log("Write data on users collection");
+          navigate("/login");
+        })
+        .catch((err) => {
+          console.error("User database write failed");
         })
         .catch((err) => {
           let ourError = err.message.split("/")[1];
@@ -216,8 +237,15 @@ const RegistrationLeft = () => {
                 </button>
               </div>
               <div className="flex justify-center">
-                Already have an account ?
-                <span className="text-[#EA6C00]"> Sign In</span>
+                <p className="px-4 font-nunito text-[14px]">
+                  Already have an account ?{" "}
+                  <Link to={"/login"}>
+                    <span className="text-[#EA6C00] hover:underline">
+                      {" "}
+                      Sign in
+                    </span>
+                  </Link>
+                </p>
               </div>
             </div>
           </div>
