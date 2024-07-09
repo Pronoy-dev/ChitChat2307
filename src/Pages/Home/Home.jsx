@@ -5,7 +5,7 @@ import HomeRight from "../../Components/HomeComponents/HomeRight/HomeRight";
 const Home = () => {
   return (
     <>
-      <div className="flex h-screen items-center justify-between bg-slate-200 p-9">
+      <div className="flex h-screen gap-x-10 bg-slate-200 p-9">
         <HomeLeft />
         <HomeRight />
       </div>
