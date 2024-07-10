@@ -8,13 +8,11 @@ const HomeRight = () => {
     <>
       <div className="w-full">
         <Search classname={"w-full py-3 rounded-full pl-12"} />
-        <div className="flex flex-wrap gap-y-6">
+        <div className="flex flex-wrap justify-between gap-y-6">
           <GroupList />
           <Friends />
           <UserList />
           <GroupList />
-          <Friends />
-          <UserList />
           <Friends />
           <UserList />
         </div>

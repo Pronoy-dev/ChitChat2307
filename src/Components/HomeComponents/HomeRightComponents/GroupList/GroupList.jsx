@@ -4,7 +4,7 @@ import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAss
 const GroupList = () => {
   return (
     <>
-      <div className="mt-5 h-[300px] w-[400px] rounded-xl px-3 py-2 shadow-xl">
+      <div className="mt-5 h-[360px] w-[500px] rounded-xl px-3 py-2 shadow-xl">
         <div className="flex items-center justify-between">
           <span className="font-custom_poppins text-xl font-semibold">
             Groups List
