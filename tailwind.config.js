@@ -7,11 +7,13 @@ export default {
         auth_primary_Color: "#11175D",
         auth_secondary_Color: "rgba(0, 0, 0, 0.42)",
         primaryBlue: "#5F35F5",
+        textPrimaryColor: "#000",
       },
       fontFamily: {
         nunito: ["Nunito", "sans-serif"],
+        custom_poppins: ["Poppins", "sans-serif"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };

@@ -9,8 +9,14 @@ const Search = ({ classname = "py-5" }) => {
         <span className="absolute left-4 top-1/2 -translate-y-[50%]">
           <FcSearch />
         </span>
-        <input type="text" id="search" name="search" className={classname} />
-        <span className="absolute right-5 top-1/2 -translate-y-[50%] text-auth_primary_Color">
+        <input
+          type="text"
+          id="search"
+          name="search"
+          className={classname}
+          placeholder="search"
+        />
+        <span className="absolute right-5 top-1/2 -translate-y-[50%] text-primaryBlue">
           <BsThreeDotsVertical />
         </span>
       </div>
