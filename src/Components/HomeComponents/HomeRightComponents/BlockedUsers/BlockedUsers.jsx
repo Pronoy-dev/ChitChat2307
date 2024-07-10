@@ -1,13 +1,13 @@
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g3.gif";
-const UserList = () => {
+const BlockedUsers = () => {
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
         <div className="flex items-center justify-between">
           <span className="font-custom_poppins text-xl font-semibold">
-            User List
+            Blocked Users
           </span>
           <span className="text-2xl text-primaryBlue">
             <BsThreeDotsVertical />
@@ -35,7 +35,7 @@ const UserList = () => {
               </div>
               <div>
                 <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
-                  +
+                  unblock
                 </button>
               </div>
             </div>
@@ -46,4 +46,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default BlockedUsers;
