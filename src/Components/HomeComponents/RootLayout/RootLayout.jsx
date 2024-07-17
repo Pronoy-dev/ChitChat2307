@@ -4,9 +4,8 @@ import { Outlet } from "react-router-dom";
 const RootLayout = () => {
   return (
     <>
-      <div>
+      <div className="flex h-screen gap-x-10 bg-slate-200 p-9">
         <HomeLeft />
-        <Outlet />
       </div>
     </>
   );

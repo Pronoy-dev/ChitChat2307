@@ -11,7 +11,7 @@ import {
 import Login from "./Pages/Login/Login.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import RootLayout from "./Components/HomeComponents/RootLayout/RootLayout.jsx";
-import HomeRight from "./Components/HomeComponents/HomeRight/HomeRight.jsx";
+
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -19,8 +19,8 @@ const App = () => {
         <Route path="/registration" element={<Registration />}></Route>
         <Route path="/login" element={<Login />}></Route>
 
-        <Route path="/" element={<RootLayout />}>
-          <Route path="/hello" element={<HomeRight />}></Route>
+        <Route element={<RootLayout />}>
+          <Route index path="/" element={<Home />}></Route>
         </Route>
       </>,
     ),
