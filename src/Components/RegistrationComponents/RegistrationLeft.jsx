@@ -109,6 +109,7 @@ const RegistrationLeft = () => {
           set(push(usersRef), {
             uid: auth.currentUser.uid,
             userName: fullfullname,
+            usersProfile: "",
             userEmail: auth.currentUser.email,
             createdAt: GetTimeNow(),
           });
