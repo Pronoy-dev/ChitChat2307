@@ -17,7 +17,7 @@ import { PasswordValidator } from "../../../Utils/Validation";
 import { SucessToast, ErrorToast, InfoToast } from "../../../Utils/Toast";
 import { GetTimeNow } from "../../../Utils/Moments/Moment";
 import { useNavigate, Link } from "react-router-dom";
-
+import dbapp from "../../FirebaseConfiguration/FirebaseDbConnection";
 import BeatLoader from "react-spinners/BeatLoader";
 
 const RegistrationLeft = () => {
@@ -106,10 +106,11 @@ const RegistrationLeft = () => {
         })
         .then(() => {
           const usersRef = ref(db, "users/");
+
           set(push(usersRef), {
             uid: auth.currentUser.uid,
             userName: fullfullname,
-            usersProfile: "",
+            usersProfile_picture: "",
             userEmail: auth.currentUser.email,
             createdAt: GetTimeNow(),
           });

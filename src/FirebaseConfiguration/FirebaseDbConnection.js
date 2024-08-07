@@ -8,6 +8,7 @@ import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyDyYgYYO-eje7cgvxCwYEWa0Aa1DFF-Biw",
   authDomain: "chitchat2307-aded9.firebaseapp.com",
+  databaseURL: "https://chitchat2307-aded9-default-rtdb.firebaseio.com",
   projectId: "chitchat2307-aded9",
   storageBucket: "chitchat2307-aded9.appspot.com",
   messagingSenderId: "67433931594",

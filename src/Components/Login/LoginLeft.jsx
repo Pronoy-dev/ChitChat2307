@@ -91,7 +91,10 @@ const LoginLeft = () => {
         const token = credential.accessToken;
 
         const user = result.user;
-        console.log(user);
+        return user;
+      })
+      .then((user) => {
+        console.log(user.reloadUserInfo);
       })
       .catch((error) => {
         // Handle Errors here.
