@@ -106,7 +106,6 @@ const RegistrationLeft = () => {
         })
         .then(() => {
           const usersRef = ref(db, "users/");
-
           set(push(usersRef), {
             uid: auth.currentUser.uid,
             userName: fullfullname,

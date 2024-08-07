@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { PasswordValidator } from "../../../Utils/Validation";
 import { EmailValidator } from "../../../Utils/Validation";
@@ -15,10 +15,13 @@ import {
 
 import { SucessToast, ErrorToast, InfoToast } from "../../../Utils/Toast.js";
 import { DNA } from "react-loader-spinner";
+import { GetTimeNow } from "../../../Utils/Moments/Moment.js";
+import { getDatabase, ref, set, push } from "firebase/database";
 
 const LoginLeft = () => {
   const auth = getAuth();
-
+  const db = getDatabase();
+  const navigate = useNavigate();
   const [eyeopen, seteyeopen] = useState(false);
   const [loading, setloading] = useState(false);
   const [loginInfo, setloginInfo] = useState({
@@ -62,6 +65,7 @@ const LoginLeft = () => {
       signInWithEmailAndPassword(auth, email, passoword)
         .then((userInfo) => {
           SucessToast(`Login successful`);
+          navigate("/");
         })
         .catch((err) => {
           ErrorToast(`${err.code}`);
@@ -94,7 +98,17 @@ const LoginLeft = () => {
         return user;
       })
       .then((user) => {
-        console.log(user.reloadUserInfo);
+        const { photoUrl, displayName, email, localId } = user.reloadUserInfo;
+        const usersRef = ref(db, "users/");
+        set(push(usersRef), {
+          uid: localId,
+          userName: displayName,
+          usersProfile_picture: photoUrl,
+          userEmail: email,
+          createdAt: GetTimeNow(),
+        }).then(() => {
+          navigate("/");
+        });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -134,6 +148,7 @@ const LoginLeft = () => {
                       type="text"
                       name="email"
                       id="email"
+                      value={loginInfo.email}
                       onChange={handleLoginInput}
                       className="py-3 font-nunito"
                       placeholder="abcd@gmail.com"
@@ -157,6 +172,7 @@ const LoginLeft = () => {
                         type={eyeopen ? "text" : "password"}
                         name="password"
                         id="passoword"
+                        value={loginInfo.passoword}
                         onChange={handleLoginInput}
                         className="py-3"
                         placeholder="..........."

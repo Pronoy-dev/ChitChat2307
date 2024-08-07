@@ -13,6 +13,7 @@ import Login from "./Pages/Login/Login.jsx";
 import RootLayout from "./Components/HomeComponents/RootLayout/RootLayout.jsx";
 
 import Home from "./Pages/Home/Home.jsx";
+import Error from "./Components/Error/Error.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -26,6 +27,7 @@ const App = () => {
           <Route index path="/chat" element={"Chat"}></Route>
           <Route index path="/notification" element={"Notification"}></Route>
           <Route index path="/settings" element={"settings"}></Route>
+          <Route index path="*" element={<Error />}></Route>
         </Route>
       </>,
     ),

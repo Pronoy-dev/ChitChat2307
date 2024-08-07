@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { getDatabase, ref, onValue } from "firebase/database";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g3.gif";
+import moment from "moment/moment";
 const UserList = () => {
+  const db = getDatabase();
+  const [users, setusers] = useState([]);
+  /**
+   * todo : Fetch all data from database
+   * DBNAME : "users"
+   */
+
+  useEffect(() => {
+    const userDbRef = ref(db, "users/");
+    onValue(userDbRef, (snapshot) => {
+      let userBlankArr = [];
+      snapshot.forEach((item) => {
+        userBlankArr.push({
+          ...item.val(),
+          userKey: item.key,
+        });
+      });
+      setusers(userBlankArr);
+    });
+  }, []);
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -14,12 +36,12 @@ const UserList = () => {
           </span>
         </div>
         <div className="mt-3 flex h-[85%] flex-col gap-y-5 overflow-y-scroll scrollbar-thin">
-          {[...new Array(10)].map((_, index) => (
+          {users.map((user) => (
             <div className="flex items-center justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3">
               <div className="h-[70px] w-[70px] rounded-full shadow-lg">
                 <picture>
                   <img
-                    src={GroupImg}
+                    src={`${user.usersProfile_picture ? user.usersProfile_picture : GroupImg}`}
                     alt={GroupImg}
                     className="h-full w-full rounded-full object-contain"
                   />
@@ -27,10 +49,10 @@ const UserList = () => {
               </div>
               <div className="flex w-[50%] flex-col items-center justify-center text-wrap text-justify">
                 <h1 className="font-custom_poppins text-lg font-semibold text-textPrimaryColor">
-                  Friends Reunion
+                  {user.userName ? user.userName : "Name xyz"}
                 </h1>
                 <span className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
-                  Hi Guys, Wassup!
+                  {moment(user.createdAt).calendar()}
                 </span>
               </div>
               <div>
