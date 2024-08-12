@@ -24,6 +24,8 @@ const UserList = () => {
       setusers(userBlankArr);
     });
   }, []);
+  console.log(users);
+
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -42,7 +44,7 @@ const UserList = () => {
                 <picture>
                   <img
                     src={`${user.usersProfile_picture ? user.usersProfile_picture : GroupImg}`}
-                    alt={GroupImg}
+                    alt={"GroupImg Missing"}
                     className="h-full w-full rounded-full object-contain"
                   />
                 </picture>

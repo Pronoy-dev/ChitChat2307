@@ -6,19 +6,29 @@ import Bell from "../../../assets/HomeAssets/HomeLeftAssets/Bell.gif";
 import Settings from "../../../assets/HomeAssets/HomeLeftAssets/Settings.gif";
 import Logout from "../../../assets/HomeAssets/HomeLeftAssets/Log-out.png";
 import { NavLink, useLocation } from "react-router-dom";
+import { IoCloudUploadOutline } from "react-icons/io5";
 const HomeLeft = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   const [test, settest] = useState("home");
   return (
     <>
-      <div className="flex h-full w-[186px] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
-        <div className="flex flex-col items-center justify-center gap-y-[83px] pt-10">
+      <div className="flex h-full w-[10%] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
+        <div>
+          <picture>
+            <img
+              src={Profile}
+              alt={Profile}
+              className="my-12 h-[100px] w-[100px] rounded-full object-cover"
+            />
+          </picture>
           <div>
-            <picture>
-              <img src={Profile} alt={Profile} />
-            </picture>
+            <span>
+              <IoCloudUploadOutline />
+            </span>
           </div>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-y-12">
           <NavLink to="/">
             <div
               className={`${path == "" && "iconsShaded w-full cursor-pointer rounded-l-lg bg-white px-14 py-2"}`}
