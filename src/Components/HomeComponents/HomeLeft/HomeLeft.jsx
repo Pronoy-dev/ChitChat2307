@@ -7,14 +7,39 @@ import Settings from "../../../assets/HomeAssets/HomeLeftAssets/Settings.gif";
 import Logout from "../../../assets/HomeAssets/HomeLeftAssets/Log-out.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { Uploader } from "uploader"; // Installed by "react-uploader".
+import { UploadButton } from "react-uploader";
 const HomeLeft = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   const [test, settest] = useState("home");
+
+  const uploader = Uploader({
+    apiKey: "free",
+  });
+  const options = {
+    multi: true,
+    editor: {
+      images: {
+        allowResizeOnMove: true,
+        preview: true,
+        crop: true,
+        cropFilePath: (image) => {
+          const { filePath } = image;
+          console.log(filePath);
+
+          return `${filePath}.crop`;
+        },
+        cropRatio: 4 / 3,
+        cropShape: "circ",
+      },
+    },
+  };
+
   return (
     <>
-      <div className="flex h-full w-[10%] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
-        <div>
+      <div className="flex h-full w-[186px] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
+        <div className="shadowProfile relative">
           <picture>
             <img
               src={Profile}
@@ -22,9 +47,19 @@ const HomeLeft = () => {
               className="my-12 h-[100px] w-[100px] rounded-full object-cover"
             />
           </picture>
-          <div>
+          <div className="absolute left-[36%] top-[46%] z-10 cursor-pointer">
             <span>
-              <IoCloudUploadOutline />
+              <UploadButton
+                uploader={uploader}
+                options={options}
+                onComplete={(files) => console.log(files.map((x) => x.fileUrl))}
+              >
+                {({ onClick }) => (
+                  <button onClick={onClick}>
+                    <IoCloudUploadOutline className="text-4xl text-white" />
+                  </button>
+                )}
+              </UploadButton>
             </span>
           </div>
         </div>
