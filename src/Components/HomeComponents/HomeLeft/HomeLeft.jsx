@@ -9,9 +9,15 @@ import { NavLink, useLocation } from "react-router-dom";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { Uploader } from "uploader"; // Installed by "react-uploader".
 import { UploadButton } from "react-uploader";
+import { getDatabase, ref, set, onValue } from "firebase/database";
+import { SucessToast } from "../../../../Utils/Toast";
+import { getAuth } from "firebase/auth";
 const HomeLeft = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
+  const [profilePictureUpdate, setprofilePictureUpdate] = useState("");
+  const db = getDatabase();
+  const auth = getAuth();
   const [test, settest] = useState("home");
 
   const uploader = Uploader({
@@ -36,6 +42,18 @@ const HomeLeft = () => {
     },
   };
 
+  /**
+   * todo : get all users function
+   * @param({})
+   */
+
+  const starCountRef = ref(db, "users/");
+  onValue(starCountRef, (snapshot) => {
+    snapshot.forEach((item) => {
+      console.log({ ...item.val(), key: item.key });
+    });
+  });
+
   return (
     <>
       <div className="flex h-full w-[186px] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
@@ -52,7 +70,13 @@ const HomeLeft = () => {
               <UploadButton
                 uploader={uploader}
                 options={options}
-                onComplete={(files) => console.log(files)}
+                onComplete={(files) =>
+                  set(ref(db, "users/"), {
+                    usersProfile_picture: files[0].fileUrl,
+                  }).then(() => {
+                    SucessToast("Proflie Picture update done", "top-center");
+                  })
+                }
               >
                 {({ onClick }) => (
                   <button onClick={onClick}>
