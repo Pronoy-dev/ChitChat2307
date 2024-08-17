@@ -52,7 +52,7 @@ const HomeLeft = () => {
               <UploadButton
                 uploader={uploader}
                 options={options}
-                onComplete={(files) => console.log(files.map((x) => x.fileUrl))}
+                onComplete={(files) => console.log(files)}
               >
                 {({ onClick }) => (
                   <button onClick={onClick}>

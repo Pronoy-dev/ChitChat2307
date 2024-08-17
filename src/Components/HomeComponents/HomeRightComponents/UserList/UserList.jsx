@@ -43,7 +43,11 @@ const UserList = () => {
               <div className="h-[70px] w-[70px] rounded-full shadow-lg">
                 <picture>
                   <img
-                    src={`${user.usersProfile_picture ? user.usersProfile_picture : GroupImg}`}
+                    src={
+                      user.usersProfile_picture
+                        ? user.usersProfile_picture
+                        : GroupImg
+                    }
                     alt={"GroupImg Missing"}
                     className="h-full w-full rounded-full object-contain"
                   />
