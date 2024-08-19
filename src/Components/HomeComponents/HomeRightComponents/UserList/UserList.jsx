@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { getDatabase, ref, onValue } from "firebase/database";
-import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g3.gif";
+import GroupImg from "../../../../assets/HomeAssets/HomeLeftAssets/Profile.png";
 import moment from "moment/moment";
 const UserList = () => {
   const db = getDatabase();
@@ -48,7 +48,11 @@ const UserList = () => {
                         ? user.usersProfile_picture
                         : GroupImg
                     }
-                    alt={"GroupImg Missing"}
+                    alt={
+                      user.usersProfile_picture
+                        ? user.usersProfile_picture
+                        : GroupImg
+                    }
                     className="h-full w-full rounded-full object-contain"
                   />
                 </picture>

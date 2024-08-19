@@ -87,6 +87,9 @@ const HomeLeft = () => {
             </span>
           </div>
         </div>
+        <h1 className="mb-10 font-custom_poppins text-[25px] font-semibold text-white">
+          {auth.currentUser.displayName}
+        </h1>
         <div className="flex flex-col items-center justify-center gap-y-12">
           <NavLink to="/">
             <div
