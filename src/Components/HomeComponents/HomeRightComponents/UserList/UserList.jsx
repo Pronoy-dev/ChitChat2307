@@ -3,8 +3,10 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { getDatabase, ref, onValue } from "firebase/database";
 import GroupImg from "../../../../assets/HomeAssets/HomeLeftAssets/Profile.png";
 import moment from "moment/moment";
+import { getAuth } from "firebase/auth";
 const UserList = () => {
   const db = getDatabase();
+  const auth = getAuth();
   const [users, setusers] = useState([]);
   /**
    * todo : Fetch all data from database
@@ -16,10 +18,12 @@ const UserList = () => {
     onValue(userDbRef, (snapshot) => {
       let userBlankArr = [];
       snapshot.forEach((item) => {
-        userBlankArr.push({
-          ...item.val(),
-          userKey: item.key,
-        });
+        if (auth.currentUser.uid !== item.val().uid) {
+          userBlankArr.push({
+            ...item.val(),
+            userKey: item.key,
+          });
+        }
       });
       setusers(userBlankArr);
     });

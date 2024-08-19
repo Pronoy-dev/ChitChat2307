@@ -10,7 +10,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { Uploader } from "uploader"; // Installed by "react-uploader".
 import { UploadButton } from "react-uploader";
 import { getDatabase, ref, set, onValue, update } from "firebase/database";
-import { SucessToast } from "../../../../Utils/Toast";
+import { ErrorToast, SucessToast } from "../../../../Utils/Toast";
 import { getAuth } from "firebase/auth";
 const HomeLeft = () => {
   const location = useLocation();
@@ -61,20 +61,23 @@ const HomeLeft = () => {
       });
     });
   }, []);
+  console.log(userList.usersProfile_picture);
 
   // const dbref for profile update
 
   const proflieUpdateRef = ref(db, `users/${userList.userKey}`);
 
-  console.log(userList);
-
   return (
     <>
-      <div className="flex h-full w-[186px] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
+      <div className="flex h-full w-[220px] flex-col items-center justify-start rounded-2xl bg-[#5F35F5]">
         <div className="shadowProfile relative">
           <picture>
             <img
-              src={Profile}
+              src={
+                userList.usersProfile_picture
+                  ? userList.usersProfile_picture
+                  : Profile
+              }
               alt={Profile}
               className="my-12 h-[100px] w-[100px] rounded-full object-cover"
             />
@@ -88,6 +91,12 @@ const HomeLeft = () => {
                   update(proflieUpdateRef, {
                     usersProfile_picture: files[0].fileUrl,
                   })
+                    .then(() => {
+                      SucessToast("Profile update done", "top-center");
+                    })
+                    .catch((err) => {
+                      ErrorToast(`${err.code}`);
+                    })
                 }
               >
                 {({ onClick }) => (
