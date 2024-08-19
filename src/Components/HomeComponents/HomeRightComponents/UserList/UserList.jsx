@@ -24,7 +24,6 @@ const UserList = () => {
       setusers(userBlankArr);
     });
   }, []);
-  console.log(users);
 
   return (
     <>

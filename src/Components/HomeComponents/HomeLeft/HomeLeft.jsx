@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Profile from "../../../assets/HomeAssets/HomeLeftAssets/Profile.png";
 import Home from "../../../assets/HomeAssets/HomeLeftAssets/Home.gif";
 import Chat from "../../../assets/HomeAssets/HomeLeftAssets/Chat.gif";
@@ -9,13 +9,13 @@ import { NavLink, useLocation } from "react-router-dom";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { Uploader } from "uploader"; // Installed by "react-uploader".
 import { UploadButton } from "react-uploader";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue, update } from "firebase/database";
 import { SucessToast } from "../../../../Utils/Toast";
 import { getAuth } from "firebase/auth";
 const HomeLeft = () => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
-  const [profilePictureUpdate, setprofilePictureUpdate] = useState("");
+  const [userList, setuserList] = useState({});
   const db = getDatabase();
   const auth = getAuth();
   const [test, settest] = useState("home");
@@ -47,12 +47,22 @@ const HomeLeft = () => {
    * @param({})
    */
 
-  const starCountRef = ref(db, "users/");
-  onValue(starCountRef, (snapshot) => {
-    snapshot.forEach((item) => {
-      console.log({ ...item.val(), key: item.key });
+  useEffect(() => {
+    const userId = auth.currentUser.uid;
+    const starCountRef = ref(db, "users/");
+    onValue(starCountRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        if (userId === item.val().uid) {
+          setuserList({
+            ...item.val(),
+            userKey: item.key,
+          });
+        }
+      });
     });
-  });
+  }, []);
+
+  console.log(userList);
 
   return (
     <>
@@ -87,7 +97,7 @@ const HomeLeft = () => {
             </span>
           </div>
         </div>
-        <h1 className="mb-10 font-custom_poppins text-[25px] font-semibold text-white">
+        <h1 className="mb-10 font-custom_poppins text-[25px] font-semibold uppercase text-white">
           {auth.currentUser.displayName}
         </h1>
         <div className="flex flex-col items-center justify-center gap-y-12">
