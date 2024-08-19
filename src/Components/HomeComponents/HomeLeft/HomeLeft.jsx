@@ -62,6 +62,10 @@ const HomeLeft = () => {
     });
   }, []);
 
+  // const dbref for profile update
+
+  const proflieUpdateRef = ref(db, `users/${userList.userKey}`);
+
   console.log(userList);
 
   return (
@@ -81,10 +85,8 @@ const HomeLeft = () => {
                 uploader={uploader}
                 options={options}
                 onComplete={(files) =>
-                  set(ref(db, "users/"), {
+                  update(proflieUpdateRef, {
                     usersProfile_picture: files[0].fileUrl,
-                  }).then(() => {
-                    SucessToast("Proflie Picture update done", "top-center");
                   })
                 }
               >
