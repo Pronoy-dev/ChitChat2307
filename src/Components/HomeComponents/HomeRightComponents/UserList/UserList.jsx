@@ -29,6 +29,11 @@ const UserList = () => {
     });
   }, []);
 
+  /**
+   * todo : handleFriendRequest function implement
+   * @param({user})
+   */
+
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -69,7 +74,10 @@ const UserList = () => {
                 </span>
               </div>
               <div>
-                <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
+                <button
+                  onClick={() => handleFriendRequest(user)}
+                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                >
                   +
                 </button>
               </div>
