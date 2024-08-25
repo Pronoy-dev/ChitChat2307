@@ -74,7 +74,6 @@ const UserList = () => {
       setisFriendRequest(blankFriendRequestList);
     });
   }, []);
-  console.log(isFriendRequest.includes(auth.currentUser.uid));
 
   return (
     <>
@@ -117,8 +116,8 @@ const UserList = () => {
               </div>
               <div>
                 {isFriendRequest.includes(
-                  auth.currentUser.uid + user.uid ||
-                    user.uid + auth.currentUser.uid,
+                  user.uid + auth.currentUser.uid ||
+                    auth.currentUser.uid + user.uid,
                 ) ? (
                   <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
                     -
