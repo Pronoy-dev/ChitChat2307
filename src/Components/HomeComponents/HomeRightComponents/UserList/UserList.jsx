@@ -78,10 +78,17 @@ const UserList = () => {
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
-        <div className="flex items-center justify-between">
+        <div className="relative flex items-center justify-between">
           <span className="font-custom_poppins text-xl font-semibold">
             User List
+            <span class="absolute left-[91px] top-[-7px] flex h-10 w-10">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#5F35F5] opacity-75"></span>
+              <span class="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#5F35F5] text-white">
+                {users.length}
+              </span>
+            </span>
           </span>
+
           <span className="text-2xl text-primaryBlue">
             <BsThreeDotsVertical />
           </span>
