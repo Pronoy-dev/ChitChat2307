@@ -87,55 +87,61 @@ const FriendRequest = () => {
           </span>
         </div>
         <div className="mt-3 flex h-[85%] flex-col gap-y-5 overflow-y-scroll scrollbar-thin">
-          {FriendRequestList?.map((item, index) => (
-            <div className="flex items-center justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3">
-              <div className="h-[70px] w-[70px] rounded-full shadow-lg">
-                <picture>
-                  <img
-                    src={
-                      item.whoSendFriendRequestProfilePicture
-                        ? item.whoSendFriendRequestProfilePicture
-                        : GroupImg
-                    }
-                    alt={
-                      item.whoSendFriendRequestProfilePicture
-                        ? item.whoSendFriendRequestProfilePicture
-                        : GroupImg
-                    }
-                    className="h-full w-full rounded-full object-contain"
-                  />
-                </picture>
+          {FriendRequestList.length > 0 ? (
+            FriendRequestList?.map((item, index) => (
+              <div className="flex items-center justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3">
+                <div className="h-[70px] w-[70px] rounded-full shadow-lg">
+                  <picture>
+                    <img
+                      src={
+                        item.whoSendFriendRequestProfilePicture
+                          ? item.whoSendFriendRequestProfilePicture
+                          : GroupImg
+                      }
+                      alt={
+                        item.whoSendFriendRequestProfilePicture
+                          ? item.whoSendFriendRequestProfilePicture
+                          : GroupImg
+                      }
+                      className="h-full w-full rounded-full object-contain"
+                    />
+                  </picture>
+                </div>
+                <div className="flex w-[50%] flex-col items-center justify-center text-wrap text-justify">
+                  <h1 className="font-custom_poppins text-lg font-semibold text-textPrimaryColor">
+                    {item.whoSendFriendRequestName
+                      ? item.whoSendFriendRequestName
+                      : "Mern 2307"}
+                  </h1>
+                  <span className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
+                    {moment(item.createdAt).fromNow()}
+                  </span>
+                </div>
+                <div className="flex">
+                  <button
+                    className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                    onClick={() => {
+                      acceptFriendRequest(item);
+                    }}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="mr-2 cursor-pointer rounded-xl bg-red-500 px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                    onClick={() => {
+                      rejectFriendRequest(item);
+                    }}
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
-              <div className="flex w-[50%] flex-col items-center justify-center text-wrap text-justify">
-                <h1 className="font-custom_poppins text-lg font-semibold text-textPrimaryColor">
-                  {item.whoSendFriendRequestName
-                    ? item.whoSendFriendRequestName
-                    : "Mern 2307"}
-                </h1>
-                <span className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
-                  {moment(item.createdAt).fromNow()}
-                </span>
-              </div>
-              <div className="flex">
-                <button
-                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
-                  onClick={() => {
-                    acceptFriendRequest(item);
-                  }}
-                >
-                  Accept
-                </button>
-                <button
-                  className="mr-2 cursor-pointer rounded-xl bg-red-500 px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
-                  onClick={() => {
-                    rejectFriendRequest(item);
-                  }}
-                >
-                  Reject
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <h1 className="flex h-full items-center justify-center">
+              No Friend Request
+            </h1>
+          )}
         </div>
       </div>
     </>
