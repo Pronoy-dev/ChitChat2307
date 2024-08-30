@@ -54,7 +54,18 @@ const FriendRequest = () => {
    */
 
   function acceptFriendRequest(item = {}) {
-    console.log(item);
+    const FriendRef = ref(db, "Friends/");
+    set(push(FriendRef), {
+      ...item,
+      createdAt: GetTimeNow(),
+      whoRecivedFriendRequestUserKey: null,
+    }).then(() => {
+      const friendRequestRef = ref(
+        db,
+        "FriendRequest/" + item?.FriendRequestKey,
+      );
+      remove(friendRequestRef);
+    });
   }
 
   return (
