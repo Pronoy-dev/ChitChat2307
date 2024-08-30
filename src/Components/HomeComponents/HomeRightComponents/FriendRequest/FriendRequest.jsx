@@ -40,13 +40,21 @@ const FriendRequest = () => {
   }, []);
 
   /**
-   * handleRejectFriendRequest function implement
+   * rejectFriendRequest function implement
    * @param({item})
    */
 
-  function handleRejectFriendRequest(item = {}) {
+  function rejectFriendRequest(item = {}) {
     const friendRequestRef = ref(db, "FriendRequest/" + item?.FriendRequestKey);
     remove(friendRequestRef);
+  }
+  /**
+   * acceptFriendRequest function implement
+   * @param({item})
+   */
+
+  function acceptFriendRequest(item = {}) {
+    console.log(item);
   }
 
   return (
@@ -98,13 +106,18 @@ const FriendRequest = () => {
                 </span>
               </div>
               <div className="flex">
-                <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
+                <button
+                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                  onClick={() => {
+                    acceptFriendRequest(item);
+                  }}
+                >
                   Accept
                 </button>
                 <button
                   className="mr-2 cursor-pointer rounded-xl bg-red-500 px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
                   onClick={() => {
-                    handleRejectFriendRequest(item);
+                    rejectFriendRequest(item);
                   }}
                 >
                   Reject
