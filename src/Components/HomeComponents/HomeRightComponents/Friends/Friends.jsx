@@ -40,6 +40,36 @@ const Friends = () => {
     });
   }, []);
 
+  /**
+   *  todo :  handleBlock function implement
+   * @param({item})
+   */
+
+  function handleBlock(item = {}) {
+    console.log(item);
+
+    const makeObj = {
+      blockedbyUid: item.whoRecivedFriendRequestUid,
+      blockedbyName: item.whoRecivedFriendRequestName,
+      blockedbyEmail: item.whoRecivedFriendRequestEmail,
+      blockedbyProfilePic: item.whoRecivedFriendRequestProfilePicture
+        ? item.whoRecivedFriendRequestProfilePicture
+        : "",
+      blockedUid: item.whoSendFriendRequestUid,
+      blockedName: item.whoSendFriendRequestName,
+      blockedEmail: item.whoSendFriendRequestEmail,
+      blockedProfilePic: item.whoSendFriendRequestProfilePicture
+        ? item.whoSendFriendRequestProfilePicture
+        : "",
+      FriendRequestKey: item.FriendRequestKey,
+    };
+    const blockRef = ref(db, "blockedUsers/");
+    console.log(item);
+    set(push(blockRef), makeObj).then(() => {
+      remove(ref(db, "Friends/" + item.FriendKey));
+    });
+  }
+
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -90,9 +120,14 @@ const Friends = () => {
                   </span>
                 </div>
                 <div>
-                  <span className="mr-1 font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
-                    Today, 8:56pm
-                  </span>
+                  <button
+                    className="mr-2 cursor-pointer rounded-xl bg-red-500 px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                    onClick={() => {
+                      handleBlock(item);
+                    }}
+                  >
+                    Block
+                  </button>
                 </div>
               </div>
             ))
