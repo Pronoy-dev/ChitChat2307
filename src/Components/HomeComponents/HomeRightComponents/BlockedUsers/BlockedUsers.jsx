@@ -39,6 +39,15 @@ const BlockedUsers = () => {
 
   console.log(BlockUserList);
 
+  /**
+   * todo : handleUnblock function implement
+   * @param {*} item
+   */
+
+  function handleUnblock(item = {}) {
+    console.log(item);
+  }
+
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -80,8 +89,11 @@ const BlockedUsers = () => {
                 </p>
               </div>
               <div>
-                <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
-                  unblock
+                <button
+                  onClick={() => handleUnblock(item)}
+                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                >
+                  Unblock
                 </button>
               </div>
             </div>
