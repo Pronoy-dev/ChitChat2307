@@ -64,7 +64,6 @@ const Friends = () => {
       FriendRequestKey: item.FriendRequestKey,
     };
     const blockRef = ref(db, "blockedUsers/");
-    console.log(item);
     set(push(blockRef), makeObj).then(() => {
       remove(ref(db, "Friends/" + item.FriendKey));
     });

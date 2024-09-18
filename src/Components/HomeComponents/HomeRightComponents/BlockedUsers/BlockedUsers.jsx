@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g3.gif";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { GetTimeNow } from "../../../../../Utils/Moments/Moment";
 import {
   getDatabase,
   ref,
@@ -29,7 +30,7 @@ const BlockedUsers = () => {
         if (1) {
           blockBlanckkArr.push({
             ...item.val(),
-            FriendKey: item.key,
+            BlockKey: item.key,
           });
         }
       });
@@ -45,7 +46,24 @@ const BlockedUsers = () => {
    */
 
   function handleUnblock(item = {}) {
-    console.log(item);
+    const unblockObj = {
+      FriendRequestKey: item.FriendRequestKey,
+      createdAt: GetTimeNow(),
+      whoRecivedFriendRequestEmail: item.blockedbyEmail,
+      whoRecivedFriendRequestName: item.blockedbyName,
+      whoRecivedFriendRequestProfilePicture: item.blockedbyProfilePic,
+      whoRecivedFriendRequestUid: item.blockedbyUid,
+      whoSendFriendRequestEmail: item.blockedEmail,
+      whoSendFriendRequestName: item.blockedName,
+      whoSendFriendRequestUid: item.blockedUid,
+      whoSendFriendRequestProfilePicture: item.blockedProfilePic
+        ? item.blockedProfilePic
+        : "",
+    };
+    const FriendsRef = ref(db, "Friends/");
+    set(push(FriendsRef), unblockObj).then(() => {
+      remove(ref(db, "blockedUsers/" + item.BlockKey));
+    });
   }
 
   return (
