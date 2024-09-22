@@ -13,25 +13,22 @@ const customStyles = {
   },
 };
 
-const ModalComponents = () => {
+const ModalComponents = ({ openModal, closeModal, modalIsOpen, children }) => {
   return (
     <div>
-      <button onClick={openModal}>Open Modal</button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <button onClick={closeModal}>close</button>
-        <div>I am a modal</div>
-        <form>
-          <input />
-          <button>tab navigation</button>
-          <button>stays</button>
-          <button>inside</button>
-          <button>the modal</button>
-        </form>
+        <button
+          onClick={closeModal}
+          className="flex h-10 w-16 items-center justify-center rounded-xl bg-red-600 text-2xl text-white"
+        >
+          X
+        </button>
+        {children}
       </Modal>
     </div>
   );
