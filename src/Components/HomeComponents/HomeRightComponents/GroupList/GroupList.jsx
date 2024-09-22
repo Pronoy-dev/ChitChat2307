@@ -1,7 +1,17 @@
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g1.gif";
+import ModalComponents from "../../../CommonComponents/ModalComponents/ModalComponents";
 const GroupList = () => {
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -9,9 +19,10 @@ const GroupList = () => {
           <span className="font-custom_poppins text-xl font-semibold">
             Groups List
           </span>
-          <span className="text-2xl text-primaryBlue">
-            <BsThreeDotsVertical />
-          </span>
+
+          <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
+            Create Group
+          </button>
         </div>
         <div className="mt-3 flex h-[85%] flex-col gap-y-5 overflow-y-scroll scrollbar-thin">
           {[...new Array(10)].map((_, index) => (
@@ -41,6 +52,7 @@ const GroupList = () => {
             </div>
           ))}
         </div>
+        <ModalComponents openModal={openModal} closeModal={closeModal} />
       </div>
     </>
   );
