@@ -132,7 +132,7 @@ const GroupList = () => {
                 <div className="my-10 w-[30%]">
                   <input type="file" onChange={onChange} />
                 </div>
-                <div className="relative flex">
+                <div className="relative flex gap-x-5">
                   <div className="w-[33%]">
                     <Cropper
                       ref={cropperRef}
@@ -174,6 +174,12 @@ const GroupList = () => {
                 </div>
               </div>
               {/* ========= cropper jsx ========= */}
+              <div className="my-10">
+                <button className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins text-white">
+                  {" "}
+                  Create Group
+                </button>
+              </div>
             </form>
           </div>
         </ModalComponents>
