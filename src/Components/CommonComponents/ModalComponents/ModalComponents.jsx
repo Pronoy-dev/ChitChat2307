@@ -15,7 +15,7 @@ const customStyles = {
 
 const ModalComponents = ({ openModal, closeModal, modalIsOpen, children }) => {
   return (
-    <div>
+    <div className="h-[80vh]">
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

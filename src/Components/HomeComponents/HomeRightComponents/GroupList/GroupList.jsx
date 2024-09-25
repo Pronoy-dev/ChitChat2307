@@ -10,6 +10,10 @@ const GroupList = () => {
   const [image, setImage] = useState(defaultSrc);
   const [cropData, setCropData] = useState("#");
   const cropperRef = createRef();
+  const [groupInfo, setgroupInfo] = useState({
+    groupName: "",
+    groupTagName: "",
+  });
 
   function openModal() {
     setIsOpen(true);
@@ -19,6 +23,7 @@ const GroupList = () => {
     setIsOpen(false);
   }
 
+  //  image onChange handler
   const onChange = (e) => {
     e.preventDefault();
     let files;
@@ -39,6 +44,15 @@ const GroupList = () => {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
     }
   };
+
+  // onChange for input value
+  function handleGroupInput(event) {
+    const { id, value } = event.target;
+    setgroupInfo({
+      ...groupInfo,
+      [id]: value,
+    });
+  }
 
   return (
     <>
@@ -88,7 +102,7 @@ const GroupList = () => {
           closeModal={closeModal}
           modalIsOpen={modalIsOpen}
         >
-          <div className="mt-10 w-[80vw] overflow-y-scroll">
+          <div className="mt-10 h-[80vh] w-[80vw] overflow-y-scroll">
             <form action="#" method="post" onSubmit={(e) => e.preventDefault()}>
               {" "}
               <div className="flex flex-col items-start gap-y-2">
@@ -105,7 +119,8 @@ const GroupList = () => {
                   type="text"
                   id="groupName"
                   name="groupName"
-                  value={""}
+                  value={groupInfo.groupName}
+                  onChange={handleGroupInput}
                   placeholder="Enter your group name"
                 />
               </div>
@@ -123,7 +138,8 @@ const GroupList = () => {
                   type="text"
                   id="groupTagName"
                   name="groupTagName"
-                  value={""}
+                  value={groupInfo.groupTagName}
+                  onChange={handleGroupInput}
                   placeholder="Enter your group tag name"
                 />
               </div>
@@ -175,7 +191,7 @@ const GroupList = () => {
               </div>
               {/* ========= cropper jsx ========= */}
               <div className="my-10">
-                <button className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins text-white">
+                <button className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins font-bold text-white">
                   {" "}
                   Create Group
                 </button>
