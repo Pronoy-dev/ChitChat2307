@@ -1,19 +1,28 @@
 import React, { useState, createRef } from "react";
 import Cropper from "react-cropper";
+import { getDatabase, push, ref, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
 import "cropperjs/dist/cropper.css";
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g1.gif";
+import { ErrorToast, SucessToast } from "../../../../../Utils/Toast";
 import ModalComponents from "../../../CommonComponents/ModalComponents/ModalComponents";
 const GroupList = () => {
+  const db = getDatabase();
+  const auth = getAuth();
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [image, setImage] = useState(defaultSrc);
-  const [cropData, setCropData] = useState("#");
+  const [cropData, setCropData] = useState("");
   const cropperRef = createRef();
   const [groupInfo, setgroupInfo] = useState({
     groupName: "",
     groupTagName: "",
   });
+  const [groupNameError, setgroupNameError] = useState("");
+  const [groupTagNameError, setgroupTagNameError] = useState("");
+  const [cropDataError, setcropDataError] = useState("");
+  const [loading, setloading] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -52,6 +61,48 @@ const GroupList = () => {
       ...groupInfo,
       [id]: value,
     });
+  }
+
+  // handleCreateGroup function implement
+
+  function handleCreateGroup() {
+    const { groupName, groupTagName } = groupInfo;
+    if (!groupName) {
+      setgroupNameError("Group Name is missing");
+    } else if (!groupTagName) {
+      setgroupNameError("");
+      setgroupTagNameError("Group Tag Name is missing");
+    } else if (!cropData) {
+      setgroupTagNameError("");
+      setcropDataError("Please crop the image");
+    } else {
+      setloading(true);
+      set(push(ref(db, "group/")), {
+        groupName,
+        groupTagName,
+        groupImage: cropData,
+        whoCreateGroupUid: auth.currentUser.uid,
+        whoCreateGroupName: auth.currentUser.displayName,
+        whoCreateGroupEmail: auth.currentUser.email,
+        whoCreateGroupProfile_picture: auth.currentUser.photoURL
+          ? auth.currentUser.photoURL
+          : "",
+      })
+        .then(() => {
+          SucessToast("please wait group is creating");
+        })
+        .catch((err) => {
+          ErrorToast(`Error from ${err.code}`, "top-left");
+        })
+        .finally(() => {
+          setgroupInfo({
+            groupName: "",
+            groupTagName: "",
+          });
+          setloading(false);
+          closeModal();
+        });
+    }
   }
 
   return (
@@ -124,6 +175,9 @@ const GroupList = () => {
                   placeholder="Enter your group name"
                 />
               </div>
+              <span className="font-nunito text-sm text-red-500">
+                {groupNameError}
+              </span>
               <div className="mt-5 flex flex-col items-start gap-y-2">
                 <label
                   htmlFor="groupTagName"
@@ -142,6 +196,9 @@ const GroupList = () => {
                   onChange={handleGroupInput}
                   placeholder="Enter your group tag name"
                 />
+                <span className="font-nunito text-sm text-red-500">
+                  {groupTagNameError}
+                </span>
               </div>
               {/* ========= cropper jsx ========= */}
               <div>
@@ -190,11 +247,24 @@ const GroupList = () => {
                 </div>
               </div>
               {/* ========= cropper jsx ========= */}
+              <span className="font-nunito text-sm text-red-500">
+                {cropDataError}
+              </span>
               <div className="my-10">
-                <button className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins font-bold text-white">
-                  {" "}
-                  Create Group
-                </button>
+                {loading ? (
+                  <button className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins font-bold text-white">
+                    {" "}
+                    loading...
+                  </button>
+                ) : (
+                  <button
+                    className="w-full rounded-xl bg-blue-300 py-3 font-custom_poppins font-bold text-white"
+                    onClick={handleCreateGroup}
+                  >
+                    {" "}
+                    Create Group
+                  </button>
+                )}
               </div>
             </form>
           </div>
