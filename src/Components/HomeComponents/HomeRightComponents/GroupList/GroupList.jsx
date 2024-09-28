@@ -6,8 +6,10 @@ import {
   getStorage,
   ref as ourStorageRef,
   uploadString,
+  getDownloadURL,
 } from "firebase/storage";
 import "cropperjs/dist/cropper.css";
+import { v4 as uuidv4 } from "uuid";
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g1.gif";
@@ -69,6 +71,8 @@ const GroupList = () => {
     });
   }
 
+  console.log();
+
   // handleCreateGroup function implement
 
   function handleCreateGroup() {
@@ -83,20 +87,34 @@ const GroupList = () => {
       setcropDataError("Please crop the image");
     } else {
       setloading(true);
-      set(push(ref(db, "group/")), {
-        groupName,
-        groupTagName,
-        groupImage: cropData,
-        whoCreateGroupUid: auth.currentUser.uid,
-        whoCreateGroupName: auth.currentUser.displayName,
-        whoCreateGroupEmail: auth.currentUser.email,
-        whoCreateGroupProfile_picture: auth.currentUser.photoURL
-          ? auth.currentUser.photoURL
-          : "",
-      })
-        .then(() => {
-          SucessToast("please wait group is creating");
+      const storageRef = ourStorageRef(
+        storage,
+        `groupImage${uuidv4().split("-")[0]}`,
+      );
+      uploadString(storageRef, cropData, "data_url")
+        .then((snapshot) => {
+          const { metadata } = snapshot;
+          console.log("Uploaded a data_url string!", metadata);
+          return metadata?.fullPath;
         })
+        .then((imagePath) => {
+          return getDownloadURL(ourStorageRef(storage, imagePath));
+        })
+        .then((downloadUrl) => {
+          console.log(downloadUrl);
+          set(push(ref(db, "group/")), {
+            groupName,
+            groupTagName,
+            groupImage: downloadUrl,
+            whoCreateGroupUid: auth.currentUser.uid,
+            whoCreateGroupName: auth.currentUser.displayName,
+            whoCreateGroupEmail: auth.currentUser.email,
+            whoCreateGroupProfile_picture: auth.currentUser.photoURL
+              ? auth.currentUser.photoURL
+              : "",
+          });
+        })
+
         .catch((err) => {
           ErrorToast(`Error from ${err.code}`, "top-left");
         })
