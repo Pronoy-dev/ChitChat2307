@@ -2,6 +2,11 @@ import React, { useState, createRef } from "react";
 import Cropper from "react-cropper";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  ref as ourStorageRef,
+  uploadString,
+} from "firebase/storage";
 import "cropperjs/dist/cropper.css";
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
@@ -9,6 +14,7 @@ import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAss
 import { ErrorToast, SucessToast } from "../../../../../Utils/Toast";
 import ModalComponents from "../../../CommonComponents/ModalComponents/ModalComponents";
 const GroupList = () => {
+  const storage = getStorage();
   const db = getDatabase();
   const auth = getAuth();
   const [modalIsOpen, setIsOpen] = React.useState(false);
