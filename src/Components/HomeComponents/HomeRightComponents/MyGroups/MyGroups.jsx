@@ -1,7 +1,16 @@
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g2.gif";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { useEffect } from "react";
 const MyGroups = () => {
+  const db = getDatabase();
+
+  useEffect(() => {
+    function groupInfoFetcher() {}
+
+    groupInfoFetcher();
+  }, []);
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
