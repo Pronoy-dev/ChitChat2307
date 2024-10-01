@@ -1,6 +1,6 @@
-import React, { useState, createRef } from "react";
+import React, { useState, createRef, useEffect } from "react";
 import Cropper from "react-cropper";
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase, push, ref, set, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import {
   getStorage,
@@ -31,6 +31,7 @@ const GroupList = () => {
   const [groupTagNameError, setgroupTagNameError] = useState("");
   const [cropDataError, setcropDataError] = useState("");
   const [loading, setloading] = useState(false);
+  const [allgroup, setallgroup] = useState([]);
 
   function openModal() {
     setIsOpen(true);
@@ -129,6 +130,39 @@ const GroupList = () => {
     }
   }
 
+  // fetch all group data
+
+  useEffect(() => {
+    function groupInfoFetcher() {
+      const starCountRef = ref(db, "group/");
+      onValue(starCountRef, (snapshot) => {
+        let groupBlankArr = [];
+        snapshot.forEach((item) => {
+          if (auth.currentUser.uid !== item.val().whoCreateGroupUid) {
+            groupBlankArr.push({ ...item.val(), groupKey: item.key });
+          }
+        });
+        setallgroup(groupBlankArr);
+      });
+    }
+
+    groupInfoFetcher();
+  }, []);
+
+  /**
+   * todo : handleJoin function implement
+   * @param({item:{}})
+   */
+
+  function handleJoin(item = {}) {
+    set(push(ref(db, "groupJoinRequest/")), {
+      ...item,
+      whoWanttoJoinGroupUid: auth.currentUser.uid,
+      whoWanttoJoinGroupName: auth.currentUser.displayName,
+      whoWanttoJoinGroupEmail: auth.currentUser.email,
+    });
+  }
+
   return (
     <>
       <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
@@ -145,27 +179,33 @@ const GroupList = () => {
           </button>
         </div>
         <div className="mt-3 flex h-[85%] flex-col gap-y-5 overflow-y-scroll scrollbar-thin">
-          {[...new Array(10)].map((_, index) => (
-            <div className="flex items-center justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3">
+          {allgroup.map((item) => (
+            <div
+              className="flex items-center justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3"
+              key={item.groupKey}
+            >
               <div className="h-[70px] w-[70px] rounded-full shadow-lg">
                 <picture>
                   <img
-                    src={GroupImg}
-                    alt={GroupImg}
+                    src={item.groupImage ? item.groupImage : GroupImg}
+                    alt={item.groupImage ? item.groupImage : GroupImg}
                     className="h-full w-full rounded-full object-contain"
                   />
                 </picture>
               </div>
               <div className="flex w-[50%] flex-col items-center justify-center text-wrap text-justify">
                 <h1 className="font-custom_poppins text-lg font-semibold text-textPrimaryColor">
-                  Friends Reunion
+                  {item ? item.groupName : "Mern2307"}
                 </h1>
-                <span className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
-                  Hi Guys, Wassup!
-                </span>
+                <p className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
+                  {item ? item.groupTagName : "Mern2307"}
+                </p>
               </div>
               <div>
-                <button className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white">
+                <button
+                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                  onClick={() => handleJoin(item)}
+                >
                   Join
                 </button>
               </div>
