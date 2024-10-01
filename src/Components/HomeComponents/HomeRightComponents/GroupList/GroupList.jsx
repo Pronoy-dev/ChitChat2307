@@ -1,5 +1,6 @@
 import React, { useState, createRef, useEffect } from "react";
 import Cropper from "react-cropper";
+import { GetTimeNow } from "../../../../../Utils/Moments/Moment";
 import { getDatabase, push, ref, set, onValue } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import {
@@ -32,6 +33,7 @@ const GroupList = () => {
   const [cropDataError, setcropDataError] = useState("");
   const [loading, setloading] = useState(false);
   const [allgroup, setallgroup] = useState([]);
+  const [allgroupRequest, setallgroupRequest] = useState([]);
 
   function openModal() {
     setIsOpen(true);
@@ -146,7 +148,19 @@ const GroupList = () => {
       });
     }
 
+    function getAllGroupRequest() {
+      const starCountRef = ref(db, "groupJoinRequest/");
+      onValue(starCountRef, (snapshot) => {
+        let groupJoinRequestArr = [];
+        snapshot.forEach((item) => {
+          groupJoinRequestArr.push(item.val().groupKey);
+        });
+        setallgroupRequest(groupJoinRequestArr);
+      });
+    }
+
     groupInfoFetcher();
+    getAllGroupRequest();
   }, []);
 
   /**
@@ -160,8 +174,13 @@ const GroupList = () => {
       whoWanttoJoinGroupUid: auth.currentUser.uid,
       whoWanttoJoinGroupName: auth.currentUser.displayName,
       whoWanttoJoinGroupEmail: auth.currentUser.email,
+      whoWanttoJoinGroupProfile_picture: auth.currentUser.photoURL
+        ? auth.currentUser.photoURL
+        : "",
+      CreatedAt: GetTimeNow(),
     });
   }
+  console.log(allgroupRequest);
 
   return (
     <>
@@ -202,12 +221,21 @@ const GroupList = () => {
                 </p>
               </div>
               <div>
-                <button
-                  className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
-                  onClick={() => handleJoin(item)}
-                >
-                  Join
-                </button>
+                {allgroupRequest?.includes(item.groupKey) ? (
+                  <button
+                    className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-base font-semibold text-white"
+                    onClick={() => handleJoin(item)}
+                  >
+                    Pending GR
+                  </button>
+                ) : (
+                  <button
+                    className="mr-2 cursor-pointer rounded-xl bg-primaryBlue px-[22px] py-1 font-custom_poppins text-xl font-semibold text-white"
+                    onClick={() => handleJoin(item)}
+                  >
+                    Join
+                  </button>
+                )}
               </div>
             </div>
           ))}
