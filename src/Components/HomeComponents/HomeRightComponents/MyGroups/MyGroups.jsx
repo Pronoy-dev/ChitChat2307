@@ -29,10 +29,9 @@ const MyGroups = () => {
       onValue(starCountRef, (snapshot) => {
         let groupJoinRequestArr = [];
         snapshot.forEach((item) => {
-          groupJoinRequestArr.push({
-            ...item.val(),
-            grouprequestKey: item.key,
-          });
+          groupJoinRequestArr.push(
+            groupJoinRequestArr.push(item.val().groupKey),
+          );
         });
         setallgroupRequest(groupJoinRequestArr);
       });
@@ -41,6 +40,8 @@ const MyGroups = () => {
     groupInfoFetcher();
     getAllGroupRequest();
   }, []);
+
+  console.log(allgroupRequest);
 
   return (
     <>
@@ -84,9 +85,22 @@ const MyGroups = () => {
                 </p>
               </div>
               <div>
-                <span className="mr-1 font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
-                  Today, 8:56pm
-                </span>
+                {allgroupRequest.includes(item.groupKey) ? (
+                  <div className="flex gap-x-1">
+                    <button className="rounded-xl bg-primaryBlue px-4 py-2 font-semibold text-white">
+                      {" "}
+                      Accept
+                    </button>
+                    <button className="rounded-xl bg-red-500 px-4 py-2 font-semibold text-white">
+                      {" "}
+                      Reject
+                    </button>
+                  </div>
+                ) : (
+                  <span className="mr-1 font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
+                    Today, 8:56pm
+                  </span>
+                )}
               </div>
             </div>
           ))}
