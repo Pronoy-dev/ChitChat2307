@@ -8,6 +8,7 @@ const MyGroups = () => {
   const db = getDatabase();
   const auth = getAuth();
   const [allgroup, setallgroup] = useState([]);
+  const [allgroupRequest, setallgroupRequest] = useState([]);
 
   useEffect(() => {
     function groupInfoFetcher() {
@@ -23,7 +24,22 @@ const MyGroups = () => {
       });
     }
 
+    function getAllGroupRequest() {
+      const starCountRef = ref(db, "groupJoinRequest/");
+      onValue(starCountRef, (snapshot) => {
+        let groupJoinRequestArr = [];
+        snapshot.forEach((item) => {
+          groupJoinRequestArr.push({
+            ...item.val(),
+            grouprequestKey: item.key,
+          });
+        });
+        setallgroupRequest(groupJoinRequestArr);
+      });
+    }
+
     groupInfoFetcher();
+    getAllGroupRequest();
   }, []);
 
   return (
