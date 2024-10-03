@@ -5,7 +5,7 @@ import ChatRight from "../../Components/ChatComponents/ChatRight";
 const Chat = () => {
   return (
     <>
-      <div className="flex w-full">
+      <div className="flex w-full gap-x-5">
         <div className="w-[30%]">
           <ChatLeft />
         </div>
