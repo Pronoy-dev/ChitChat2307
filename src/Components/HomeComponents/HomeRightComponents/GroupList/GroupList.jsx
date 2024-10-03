@@ -16,7 +16,7 @@ const defaultSrc =
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g1.gif";
 import { ErrorToast, SucessToast } from "../../../../../Utils/Toast";
 import ModalComponents from "../../../CommonComponents/ModalComponents/ModalComponents";
-const GroupList = () => {
+const GroupList = ({ isChatC = false }) => {
   const storage = getStorage();
   const db = getDatabase();
   const auth = getAuth();
@@ -180,11 +180,16 @@ const GroupList = () => {
       CreatedAt: GetTimeNow(),
     });
   }
-  console.log(allgroupRequest);
 
   return (
     <>
-      <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
+      <div
+        className={
+          isChatC
+            ? "mt-5 h-[360px] w-full rounded-xl px-3 py-2 shadow-xl"
+            : "mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl"
+        }
+      >
         <div className="flex items-center justify-between">
           <span className="font-custom_poppins text-xl font-semibold">
             Groups List

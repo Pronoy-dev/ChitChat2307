@@ -6,8 +6,8 @@ const ChatLeft = () => {
   return (
     <>
       <Search classname="w-full bg-white rounded-xl py-3 px-10" />
-      <GroupList />
-      <Friends />
+      <GroupList isChatC={true} />
+      <Friends isChatC={true} />
     </>
   );
 };

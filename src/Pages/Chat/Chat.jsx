@@ -9,7 +9,7 @@ const Chat = () => {
         <div className="w-[30%]">
           <ChatLeft />
         </div>
-        <div className="w-[70%]">
+        <div className="w-[70%] rounded-xl border-2 border-gray-300 p-8">
           <ChatRight />
         </div>
       </div>

@@ -14,7 +14,7 @@ import {
 import { GetTimeNow } from "../../../../../Utils/Moments/Moment";
 import moment from "moment/moment";
 
-const Friends = () => {
+const Friends = ({ isChatC = false }) => {
   const db = getDatabase();
   const auth = getAuth();
   const [FriendList, setFriendList] = useState([]);
@@ -71,7 +71,13 @@ const Friends = () => {
 
   return (
     <>
-      <div className="mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl">
+      <div
+        className={
+          isChatC
+            ? "mt-5 h-[360px] w-full rounded-xl px-3 py-2 shadow-xl"
+            : "mt-5 h-[360px] w-[32%] rounded-xl px-3 py-2 shadow-xl"
+        }
+      >
         <div className="relative flex items-center justify-between">
           <span className="font-custom_poppins text-xl font-semibold">
             Friend
