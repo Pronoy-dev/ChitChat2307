@@ -15,6 +15,7 @@ import RootLayout from "./Components/HomeComponents/RootLayout/RootLayout.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import Error from "./Components/Error/Error.jsx";
 import Chat from "./Pages/Chat/Chat.jsx";
+import Notification from "./Pages/Notification/Notification.jsx";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -26,7 +27,7 @@ const App = () => {
         <Route element={<RootLayout />}>
           <Route index path="/" element={<Home />}></Route>
           <Route index path="/chat" element={<Chat />}></Route>
-          <Route index path="/notification" element={"Notification"}></Route>
+          <Route index path="/notification" element={<Notification />}></Route>
           <Route index path="/settings" element={"settings"}></Route>
           <Route index path="*" element={<Error />}></Route>
         </Route>
