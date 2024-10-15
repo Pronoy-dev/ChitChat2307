@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import GroupImg from "../../../../assets/HomeAssets/HomeRightAssets/GroupListAssets/g2.gif";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getDatabase,
   ref,
@@ -13,11 +14,13 @@ import {
 } from "firebase/database";
 import { GetTimeNow } from "../../../../../Utils/Moments/Moment";
 import moment from "moment/moment";
+import { FriendsInfo } from "../../../../Features/Redux/AllSlice/Friendslice";
 
 const Friends = ({ isChatC = false }) => {
   const db = getDatabase();
   const auth = getAuth();
   const [FriendList, setFriendList] = useState([]);
+  const dispatch = useDispatch();
 
   /**
    * todo : Fetch all data from database
@@ -69,6 +72,12 @@ const Friends = ({ isChatC = false }) => {
     });
   }
 
+  // handleFriend function
+
+  function handleFriend(item = {}) {
+    dispatch(FriendsInfo(item));
+  }
+
   return (
     <>
       <div
@@ -96,7 +105,10 @@ const Friends = ({ isChatC = false }) => {
         <div className="mt-3 flex h-[85%] flex-col gap-y-5 overflow-y-scroll scrollbar-thin">
           {FriendList.length > 0 ? (
             FriendList.map((item, index) => (
-              <div className="flex items-start justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3">
+              <div
+                className="flex items-start justify-between border-b-2 border-b-[#000000] border-opacity-[20%] pb-3"
+                onClick={() => handleFriend(item)}
+              >
                 <div className="h-[70px] w-[70px] rounded-full shadow-lg">
                   <picture>
                     <img

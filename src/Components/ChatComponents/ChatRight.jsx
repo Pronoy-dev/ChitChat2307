@@ -6,9 +6,13 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import { FaFaceSmile } from "react-icons/fa6";
 import { FaRegSmile } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
+import { getDatabase, push, ref, set } from "firebase/database";
+import { GetTimeNow } from "../../../Utils/Moments/Moment";
 const ChatRight = () => {
   const [showEmojiPicker, setshowEmojiPicker] = useState(false);
   const [inputValue, setinputValue] = useState("");
+  const db = getDatabase();
 
   function handleEmoji(argu) {
     setinputValue((prevstate) => {
@@ -21,15 +25,41 @@ const ChatRight = () => {
     setinputValue(value);
   }
 
+  const { friendsItem } = useSelector((state) => state.friendStore);
+
+  // hanldeMessageSend function
+
+  function hanldeMessageSend() {
+    if (inputValue) {
+      set(push(ref(db, "singleMsg/")), {
+        msg: inputValue,
+        createdAt: GetTimeNow(),
+      })
+        .then(() => {
+          console.log("msg sent");
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setinputValue("");
+        });
+    }
+  }
+
   return (
     <>
       <div className="flex items-center justify-between border-b-2 border-b-[rgb(0,0,0,.25)]">
         <div className="flex items-center gap-x-[33px]">
           <picture>
-            <img src={avatar} alt={avatar} />
+            <img
+              className="rounded-full"
+              src={friendsItem.whoSendFriendRequestProfilePicture || avatar}
+              alt={friendsItem.whoSendFriendRequestProfilePicture || avatar}
+            />
           </picture>
-          <div className="flex flex-col">
-            <h3>Swathi </h3>
+          <div className="flex flex-col text-xl capitalize">
+            <h3>{friendsItem.whoSendFriendRequestName || "Empty"} </h3>
             <p>Online</p>
           </div>
         </div>
@@ -105,7 +135,10 @@ const ChatRight = () => {
         <button className="cursor-pointer text-2xl text-[#707070]">
           <IoCameraOutline />
         </button>
-        <button className="rounded-xl bg-[#5F35F5] px-4 text-2xl text-white">
+        <button
+          onClick={hanldeMessageSend}
+          className="rounded-xl bg-[#5F35F5] px-4 text-2xl text-white"
+        >
           <RiSendPlaneFill />
         </button>
       </div>
