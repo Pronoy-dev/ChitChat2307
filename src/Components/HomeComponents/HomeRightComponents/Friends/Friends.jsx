@@ -32,7 +32,10 @@ const Friends = ({ isChatC = false }) => {
     onValue(FriendsDbRef, (snapshot) => {
       let FriendsArr = [];
       snapshot.forEach((item) => {
-        if (auth.currentUser.uid === item.val().whoRecivedFriendRequestUid) {
+        if (
+          auth.currentUser.uid === item.val().whoRecivedFriendRequestUid ||
+          auth.currentUser.uid === item.val().whoSendFriendRequestUid
+        ) {
           FriendsArr.push({
             ...item.val(),
             FriendKey: item.key,
@@ -113,14 +116,18 @@ const Friends = ({ isChatC = false }) => {
                   <picture>
                     <img
                       src={
-                        item.whoSendFriendRequestProfilePicture
-                          ? item.whoSendFriendRequestProfilePicture
-                          : GroupImg
+                        auth.currentUser.uid == item.whoSendFriendRequestUid
+                          ? item.whoRecivedFriendRequestProfilePicture
+                          : item.whoSendFriendRequestProfilePicture
+                            ? item.whoSendFriendRequestProfilePicture
+                            : GroupImg
                       }
                       alt={
-                        item.whoSendFriendRequestProfilePicture
-                          ? item.whoSendFriendRequestProfilePicture
-                          : GroupImg
+                        auth.currentUser.uid == item.whoSendFriendRequestUid
+                          ? item.whoRecivedFriendRequestProfilePicture
+                          : item.whoSendFriendRequestProfilePicture
+                            ? item.whoSendFriendRequestProfilePicture
+                            : GroupImg
                       }
                       className="h-full w-full rounded-full object-contain"
                     />
@@ -128,9 +135,9 @@ const Friends = ({ isChatC = false }) => {
                 </div>
                 <div className="flex w-[50%] flex-col items-center justify-center text-wrap text-justify">
                   <h1 className="font-custom_poppins text-lg font-semibold text-textPrimaryColor">
-                    {item.whoSendFriendRequestName
-                      ? item.whoSendFriendRequestName
-                      : "Mern 2307"}
+                    {auth.currentUser.uid == item.whoSendFriendRequestUid
+                      ? item.whoRecivedFriendRequestName
+                      : item.whoSendFriendRequestName}
                   </h1>
                   <span className="font-custom_poppins text-[14px] font-medium text-[#4D4D4D] opacity-[75%]">
                     {moment(item.createdAt).fromNow()}
