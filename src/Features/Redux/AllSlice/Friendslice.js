@@ -10,6 +10,7 @@ export const FriendSlice = createSlice({
   reducers: {
     FriendsInfo: (state, action) => {
       state.friendsItem = action.payload;
+      console.log(action.payload);
     },
   },
 });

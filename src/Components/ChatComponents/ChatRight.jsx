@@ -9,12 +9,23 @@ import { IoCameraOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { GetTimeNow } from "../../../Utils/Moments/Moment";
+import { ErrorToast } from "../../../Utils/Toast.js";
+import { getAuth } from "firebase/auth";
 import ModalComponents from "../CommonComponents/ModalComponents/ModalComponents.jsx";
+import {
+  getStorage,
+  ref as uploadImageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 const ChatRight = () => {
+  const db = getDatabase();
+  const auth = getAuth();
+  const storage = getStorage();
   const [showEmojiPicker, setshowEmojiPicker] = useState(false);
   const [inputValue, setinputValue] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
-  const db = getDatabase();
+  const [image, setimage] = useState(null);
 
   function openModal() {
     setIsOpen(true);
@@ -57,19 +68,90 @@ const ChatRight = () => {
     }
   }
 
+  /**
+   * todo : handleUploadImage function
+   * @param({})
+   */
+
+  const handleUploadImage = (event) => {
+    setimage(event.target.files[0]);
+  };
+  /**
+   * todo : handleSentImage function
+   * @param({})
+   */
+
+  const handleSentImage = (event) => {
+    if (!image) {
+      ErrorToast("First upload an image");
+    }
+    if (
+      image.type !== "image/png" ||
+      "image/gif" ||
+      "image/jpeg" ||
+      "image/webp"
+    ) {
+      ErrorToast("Img format is not acceptable");
+    }
+
+    const storageRef = uploadImageRef(storage, "images/" + image.name);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.error("Error from upload image", error);
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+        });
+      },
+    );
+  };
+
   return (
     <>
       <div className="flex items-center justify-between border-b-2 border-b-[rgb(0,0,0,.25)]">
         <div className="flex items-center gap-x-[33px]">
           <picture>
-            <img
-              className="rounded-full"
-              src={friendsItem.whoSendFriendRequestProfilePicture || avatar}
-              alt={friendsItem.whoSendFriendRequestProfilePicture || avatar}
-            />
+            {auth.currentUser ? (
+              <img
+                className="rounded-full"
+                src={
+                  auth.currentUser.uid === friendsItem.whoSendFriendRequestUid
+                    ? friendsItem.whoRecivedFriendRequestProfilePicture
+                    : friendsItem.whoSendFriendRequestProfilePicture || avatar
+                }
+                alt={
+                  auth.currentUser.uid === friendsItem.whoSendFriendRequestUid
+                    ? friendsItem.whoRecivedFriendRequestProfilePicture
+                    : friendsItem.whoSendFriendRequestProfilePicture
+                }
+              />
+            ) : (
+              <img className="rounded-full" src={avatar} alt="Avatar" />
+            )}
           </picture>
           <div className="flex flex-col text-xl capitalize">
-            <h3>{friendsItem.whoSendFriendRequestName || "Empty"} </h3>
+            {auth.currentUser ? (
+              <h3>
+                {auth.currentUser.uid === friendsItem.whoSendFriendRequestUid
+                  ? friendsItem.whoRecivedFriendRequestName
+                  : friendsItem.whoSendFriendRequestName || "No Name"}
+              </h3>
+            ) : (
+              <h3> No name </h3>
+            )}
             <p>Online</p>
           </div>
         </div>
@@ -166,7 +248,7 @@ const ChatRight = () => {
           <div className="flex w-full items-center justify-center">
             <label
               htmlFor="dropzone-file"
-              className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 dark:hover:bg-gray-800"
+              className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
             >
               <div className="flex flex-col items-center justify-center pb-6 pt-5">
                 <svg
@@ -192,10 +274,19 @@ const ChatRight = () => {
                   SVG, PNG, JPG or GIF (MAX. 800x400px)
                 </p>
               </div>
-              <input id="dropzone-file" type="file" className="hidden" />
+              <input
+                id="dropzone-file"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleUploadImage}
+              />
             </label>
           </div>
-          <button className="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-white">
+          <button
+            className="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-white"
+            onClick={handleSentImage}
+          >
             Send
           </button>
         </div>
