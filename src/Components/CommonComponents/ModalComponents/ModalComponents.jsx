@@ -23,7 +23,13 @@ const customStyles = {
   },
 };
 
-const ModalComponents = ({ openModal, closeModal, modalIsOpen, children }) => {
+const ModalComponents = ({
+  openModal,
+  closeModal,
+  modalIsOpen,
+  children,
+  isChatPage = false,
+}) => {
   return (
     <div className="h-[80vh]">
       <Modal
@@ -34,7 +40,11 @@ const ModalComponents = ({ openModal, closeModal, modalIsOpen, children }) => {
       >
         <button
           onClick={closeModal}
-          className="flex h-10 w-16 items-center justify-center rounded-xl bg-red-600 text-2xl text-white"
+          className={
+            isChatPage
+              ? "mb-10 flex h-10 w-16 items-center justify-center rounded-xl bg-red-600 text-2xl text-white"
+              : "flex h-10 w-16 items-center justify-center rounded-xl bg-red-600 text-2xl text-white"
+          }
         >
           X
         </button>

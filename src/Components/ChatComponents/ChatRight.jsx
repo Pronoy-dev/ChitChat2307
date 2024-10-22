@@ -157,6 +157,7 @@ const ChatRight = () => {
       </div>
 
       <ModalComponents
+        isChatPage={true}
         openModal={openModal}
         closeModal={closeModal}
         modalIsOpen={modalIsOpen}
