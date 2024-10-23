@@ -26,6 +26,8 @@ const ChatRight = () => {
   const [inputValue, setinputValue] = useState("");
   const [modalIsOpen, setIsOpen] = useState(false);
   const [image, setimage] = useState(null);
+  const [progress, setprogress] = useState(null);
+  const [downloadURL, setdownloadURL] = useState("");
 
   function openModal() {
     setIsOpen(true);
@@ -85,15 +87,12 @@ const ChatRight = () => {
     if (!image) {
       ErrorToast("First upload an image");
     }
-    if (
-      image.type !== "image/png" ||
-      "image/gif" ||
-      "image/jpeg" ||
-      "image/webp"
-    ) {
-      ErrorToast("Img format is not acceptable");
-    }
+    let typeArr = ["image/png", "image/gif", "image/jpeg", "image/webp"];
 
+    // Check if the image type is valid
+    if (!typeArr.includes(image.type)) {
+      ErrorToast("Image Format is not acceptable");
+    }
     const storageRef = uploadImageRef(storage, "images/" + image.name);
     const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -104,20 +103,22 @@ const ChatRight = () => {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setprogress(Math.ceil(progress));
         console.log("Upload is " + progress + "% done");
       },
       (error) => {
         console.error("Error from upload image", error);
       },
       () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        closeModal();
+        setprogress(null);
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
+          setdownloadURL(downloadURL);
         });
       },
     );
   };
+  console.log(downloadURL);
 
   return (
     <>
@@ -283,12 +284,24 @@ const ChatRight = () => {
               />
             </label>
           </div>
-          <button
-            className="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-white"
-            onClick={handleSentImage}
-          >
-            Send
-          </button>
+          {progress ? (
+            <div class="my-5 w-full rounded-full px-4 py-2">
+              <div
+                class="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-center font-medium text-white"
+                style={{ width: `${progress}%` }}
+              >
+                {" "}
+                {progress}%
+              </div>
+            </div>
+          ) : (
+            <button
+              className="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-white"
+              onClick={handleSentImage}
+            >
+              Send
+            </button>
+          )}
         </div>
       </ModalComponents>
       {/* === type chat === */}
