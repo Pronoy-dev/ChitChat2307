@@ -29,21 +29,27 @@ const Friends = ({ isChatC = false }) => {
 
   useEffect(() => {
     const FriendsDbRef = ref(db, "Friends/");
-    onValue(FriendsDbRef, (snapshot) => {
-      let FriendsArr = [];
-      snapshot.forEach((item) => {
-        if (
-          auth.currentUser.uid === item.val().whoRecivedFriendRequestUid ||
-          auth.currentUser.uid === item.val().whoSendFriendRequestUid
-        ) {
-          FriendsArr.push({
-            ...item.val(),
-            FriendKey: item.key,
-          });
-        }
+
+    // Ensure that auth.currentUser is available before proceeding
+    if (auth.currentUser) {
+      onValue(FriendsDbRef, (snapshot) => {
+        let FriendsArr = [];
+        snapshot.forEach((item) => {
+          if (
+            auth.currentUser.uid === item.val().whoRecivedFriendRequestUid ||
+            auth.currentUser.uid === item.val().whoSendFriendRequestUid
+          ) {
+            FriendsArr.push({
+              ...item.val(),
+              FriendKey: item.key,
+            });
+          }
+        });
+        setFriendList(FriendsArr);
       });
-      setFriendList(FriendsArr);
-    });
+    } else {
+      console.log("User not logged in or auth.currentUser is null");
+    }
   }, []);
 
   /**
@@ -78,7 +84,25 @@ const Friends = ({ isChatC = false }) => {
   // handleFriend function
 
   function handleFriend(item = {}) {
-    dispatch(FriendsInfo(item));
+    if (item.whoRecivedFriendRequestUid === auth.currentUser.uid) {
+      dispatch(
+        FriendsInfo({
+          id: item.whoSendFriendRequestUid,
+          name: item.whoSendFriendRequestName,
+          email: item.whoSendFriendRequestEmail,
+          profile_picture: item.whoSendFriendRequestProfilePicture,
+        }),
+      );
+    } else {
+      dispatch(
+        FriendsInfo({
+          id: item.whoRecivedFriendRequestUid,
+          name: item.whoRecivedFriendRequestName,
+          email: item.whoRecivedFriendRequestEmail,
+          profile_picture: item.whoRecivedFriendRequestProfilePicture,
+        }),
+      );
+    }
   }
 
   return (
